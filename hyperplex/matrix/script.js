@@ -1,23 +1,24 @@
-const matrix = document.getElementById("matrix");
-const totalCombo = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+const chars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
 
-function randomGenerate() {
-    let randomArray = [];
+const randomChar = () => chars[Math.floor(Math.random() * (chars.length - 1))],
+      randomString = length => Array.from(Array(length)).map(randomChar).join("");
 
-    for (let i = 0; i < 5000; i++) {
-        const randomNumber = Math.floor(Math.random() * totalCombo.length);
-        randomArray.push(totalCombo[randomNumber]);
-    }
-    
-    const matrixBuilder = randomArray.toString();
-    
-    matrix.innerHTML = matrixBuilder.replace(/,/g, '');
-    
+const card = document.querySelector(".card"),
+      letters = card.querySelector(".card-letters");
+
+const handleOnMove = e => {
+  const rect = card.getBoundingClientRect(),
+        x = e.clientX - rect.left,
+        y = e.clientY - rect.top;
+
+  letters.style.setProperty("--x", `${x}px`);
+  letters.style.setProperty("--y", `${y}px`);
+
+  console.log(letters);
+
+  letters.innerText = randomString(2500);    
 }
 
-randomGenerate();
+card.onmousemove = e => handleOnMove(e);
 
-matrix.addEventListener("mousemove", (e) => {
-    randomGenerate();
-})
-
+card.ontouchmove = e => handleOnMove(e.touches[0]);
